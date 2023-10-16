@@ -5,11 +5,13 @@ class Student(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     group = models.ManyToManyField('Group', related_name='students')
+    is_student = models.BooleanField(default=True)
 
 
 class Teacher(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    is_teacher = models.BooleanField(default=True)
 
 
 class Course(models.Model):
