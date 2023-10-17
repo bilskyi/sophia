@@ -1,17 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+
+# class User(AbstractUser):
+#     is_student = models.BooleanField(default=False)
+#     is_teacher = models.BooleanField(default=False)
+
+#     def save(self, *args, **kwargs):
+#         if self.is_student and self.is_teacher:
+#             raise ValueError('A user cannot be both a student and a teacher.')
+#         super(User, self).save(*args, **kwargs)
 
 
 class Student(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
     group = models.ManyToManyField('Group', related_name='students')
-    is_student = models.BooleanField(default=True)
 
 
 class Teacher(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    is_teacher = models.BooleanField(default=True)
+    pass
 
 
 class Course(models.Model):
