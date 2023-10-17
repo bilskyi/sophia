@@ -13,3 +13,8 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = models.Teacher
         fields = '__all__'
         
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = '__all__'
