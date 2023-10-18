@@ -12,14 +12,6 @@ from django.contrib.auth.models import AbstractUser
 #         super(User, self).save(*args, **kwargs)
 
 
-class Student(models.Model):
-    group = models.ManyToManyField('Group', related_name='students')
-
-
-class Teacher(models.Model):
-    pass
-
-
 class Course(models.Model):
     name = models.CharField("Subject", max_length=50)
     description = models.TextField("Description",)

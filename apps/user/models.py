@@ -32,15 +32,21 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+
 class User(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = (
+          (0, 'Student'),
+          (1, 'Teacher'),
+    )
+
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=False, null=False)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-
 
     objects = UserManager()
 
@@ -48,5 +54,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
-        """ Return string representation of our user """
         return self.email
