@@ -11,4 +11,4 @@ class CreateCourse(generics.CreateAPIView):
 class GetCourses(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [permissions.IsStudent, permissions.IsTeacher]
+    permission_classes = [permissions.IsStudent]
