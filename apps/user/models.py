@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
@@ -32,21 +33,27 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, unique=True, db_index=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    ROLE_CHOICES = (
+          (0, 'Student'),
+          (1, 'Teacher'),
+          (2, 'Admin'),
+    )
+
+    email = models.EmailField(_('Email'), max_length=255, unique=True, db_index=True)
+    first_name = models.CharField(_('First Name'), max_length=255)
+    last_name = models.CharField(_('Last Name'), max_length=255)
+    role = models.PositiveSmallIntegerField(_('Role'), choices=ROLE_CHOICES, blank=False)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
 
-
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'role']
 
     def __str__(self):
-        """ Return string representation of our user """
         return self.email
