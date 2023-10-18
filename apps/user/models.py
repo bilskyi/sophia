@@ -37,12 +37,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
           (0, 'Student'),
           (1, 'Teacher'),
+          (2, 'Admin'),
     )
 
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=False, null=False)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=False)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -51,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'role']
 
     def __str__(self):
         return self.email
