@@ -44,6 +44,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('First Name'), max_length=255)
     last_name = models.CharField(_('Last Name'), max_length=255)
     role = models.PositiveSmallIntegerField(_('Role'), choices=Role.choices, blank=False)
+    group = models.ForeignKey('core.Group', on_delete=models.PROTECT, related_name='users', verbose_name=_("Group"), null=True)
+
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
