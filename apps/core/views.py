@@ -11,9 +11,10 @@ class GetCoursesView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class CreateCourseView(generics.CreateAPIView):
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [CreateCourse]
+    permission_classes = [IsTeacherOrReadOnly]
 
 
 class GroupViewSet(viewsets.ModelViewSet):

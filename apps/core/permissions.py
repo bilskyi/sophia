@@ -2,8 +2,10 @@ from rest_framework import permissions
 from apps.user.models import User
 
 
-class CreateCourse(permissions.BasePermission):
+class IsTeacherOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
         return request.user.role == User.Role.TEACHER
     
 
