@@ -5,6 +5,6 @@ from .views import *
 # router.register(r'students')
 
 urlpatterns = [
-    path('', GetCourses.as_view())
-    # path('', include(router.urls))
+    path('', GetCoursesView.as_view()),
+    path('create/', CreateCourseView.as_view())
 ]

@@ -5,4 +5,15 @@ from . import models
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
-        fields = '__all__'
+        fields = ['name', 'description']
+        extra_fields = {
+            'role': {
+                'read_only': True
+            }
+        }
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        course = models.Course.objects.create(**validated_data)
+        course.owner.add(user)
+        return course

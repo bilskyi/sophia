@@ -35,16 +35,15 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    ROLE_CHOICES = (
-          (0, 'Student'),
-          (1, 'Teacher'),
-          (2, 'Admin'),
-    )
+    class Role(models.IntegerChoices):
+        STUDENT = 0, 'Student'
+        TEACHER = 1, 'Teacher'
+        ADMIN = 2, 'Admin'
 
     email = models.EmailField(_('Email'), max_length=255, unique=True, db_index=True)
     first_name = models.CharField(_('First Name'), max_length=255)
     last_name = models.CharField(_('Last Name'), max_length=255)
-    role = models.PositiveSmallIntegerField(_('Role'), choices=ROLE_CHOICES, blank=False)
+    role = models.PositiveSmallIntegerField(_('Role'), choices=Role.choices, blank=False)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

@@ -8,6 +8,9 @@ class Course(models.Model):
     description = models.TextField(_("Description"),)
     owner = models.ManyToManyField(to='user.User', related_name='courses', verbose_name=_('Owner'))
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Group(models.Model):
     name = models.CharField(_('Group'), max_length=30)
