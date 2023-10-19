@@ -8,6 +8,5 @@ router.register('course', CourseViewSet)
 
 
 urlpatterns = [
-    path('', GetCoursesView.as_view()),
     path('', include(router.urls)),
 ]

@@ -5,12 +5,6 @@ from .models import *
 from rest_framework import generics, permissions, viewsets
 
 
-class GetCoursesView(generics.ListAPIView):
-    queryset = Course.objects.all()
-    serializer_class = serializers.CourseSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer

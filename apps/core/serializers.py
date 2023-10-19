@@ -5,13 +5,13 @@ from . import models
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Group
-        fields = ['name',]
+        fields = ['id', 'name',]
 
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'description']
         extra_fields = {
             'role': {
                 'read_only': True
