@@ -1,4 +1,6 @@
 from django.shortcuts import render
+
+from apps.user.serializers import UserSerializer
 from . import serializers
 from .permissions import *
 from .models import *
@@ -15,3 +17,11 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+
+class GetUsersByGroup(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        group = self.request.GET.get('group')
+        return User.objects.filter(group=group)
