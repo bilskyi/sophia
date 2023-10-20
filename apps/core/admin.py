@@ -10,4 +10,12 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    fields = ['name']
+    list_display = ['name', 'get_group_courses',]
+    fields = ['name', 'get_group_courses']
+    readonly_fields = ['get_group_courses', ]
+
+
+    @admin.display(description='Group Courses')
+    def get_group_courses(self, group: Group):
+        courses =  Course.objects.filter(group=group)
+        return ", ".join([course.name for course in courses])
