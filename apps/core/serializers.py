@@ -11,9 +11,9 @@ class GroupSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
-        fields = ['id', 'name', 'description']
-        extra_fields = {
-            'role': {
+        fields = ['id', 'name', 'description', 'group', 'owner']
+        extra_kwargs = {
+            'owner': {
                 'read_only': True
             }
         }
