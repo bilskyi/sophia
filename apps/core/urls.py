@@ -9,5 +9,6 @@ router.register('course', CourseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('users-by-group/<int:pk>/', GetUsersByGroupView.as_view()),
+    path('get-users-by-group/<int:pk>/', GetUsersByGroupViewSet.as_view({'get': 'list'}))
+
 ]

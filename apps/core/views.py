@@ -19,11 +19,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class GetUsersByGroupView(generics.RetrieveAPIView):
+class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
-    permission_classes = [GetUsersByGroup | permissions.IsAdminUser]
-    
+    permission_classes = [IsCourseOwner | permissions.IsAdminUser]
 
     def get_queryset(self):
-        group_id = self.kwargs.get('group_id')
-        return User.objects.filter(group=group_id)
+        group_id = self.kwargs.get('pk')
+        return User.objects.filter(group_id=group_id)

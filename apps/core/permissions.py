@@ -26,7 +26,7 @@ class IsAdminOrReadOnly(permissions.IsAdminUser):
         return request.method in permissions.SAFE_METHODS or is_admin
     
 
-class GetUsersByGroup(permissions.BasePermission):
+class IsCourseOwner(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.is_authenticated and request.user.role == User.Role.TEACHER:
                 has_courses_with_group = Course.objects.filter(owner=request.user, group_id=view.kwargs.get('pk')).exists()
