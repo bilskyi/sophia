@@ -3,17 +3,18 @@ from apps.user.models import User
 from .models import Course
 
 
+class IsVerified(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_verified
+
+
 class IsTeacherOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        if request.user.is_authenticated:
-            return request.user.role == User.Role.TEACHER
-        
-        return False
+        return request.user.role == User.Role.TEACHER
 
-    
 
 class IsAdminOrReadOnly(permissions.IsAdminUser):
 
@@ -28,9 +29,9 @@ class IsAdminOrReadOnly(permissions.IsAdminUser):
 
 class IsCourseOwner(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.is_authenticated and request.user.role == User.Role.TEACHER:
+        if request.user.role == User.Role.TEACHER:
                 has_courses_with_group = Course.objects.filter(owner=request.user, group_id=view.kwargs.get('pk')).exists()
                 if has_courses_with_group:
                     return True
-
+    
         return False

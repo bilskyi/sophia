@@ -46,6 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.PositiveSmallIntegerField(_('Role'), choices=Role.choices, blank=False)
     group = models.ForeignKey('core.Group', on_delete=models.PROTECT, related_name='users', verbose_name=_("Group"), null=True)
 
+    is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=20, null=True, blank=True)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
