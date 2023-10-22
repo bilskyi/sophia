@@ -30,8 +30,10 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data['email']
+        password = serializer.data['password']
 
         user = authenticate(email=email, password=password)
         if not user:
@@ -115,6 +117,7 @@ class VerifyOTPView(APIView):
 class ResendOTPView(APIView):
     def post(self, request):
         serializer = VerifyUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         email = serializer.data['email']
         send_otp_via_email(email)
         
