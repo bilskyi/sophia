@@ -1,21 +1,34 @@
 from django.contrib.auth import login, authenticate, logout
 from rest_framework.views import APIView
-from .serializers import UserSerializer
+from .emails import send_otp_via_email
+from .serializers import UserSerializer, VerifyUserSerializer
+from .models import User
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt, datetime
 
 
 class RegisterView(APIView):
+
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.create(validated_data=serializer.validated_data)
+        send_otp_via_email(serializer.data['email'])
         login(request, user)
-        return Response(serializer.data)
+        return Response({'status': 200,
+                         'message': 'Registration was successful, check your email',
+                         'data': serializer.data
+                         })
 
 
 class LoginView(APIView):
+
+    permission_classes = [AllowAny]
+
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -56,6 +69,9 @@ class UserView(APIView):
 
 
 class LogoutView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         logout(request)
 
@@ -66,3 +82,31 @@ class LogoutView(APIView):
         }
 
         return response
+    
+
+class VerifyOTP(APIView):
+    
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = VerifyUserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.data['email']
+            otp = serializer.data['otp']
+
+            user = User.objects.filter(email=email)
+            if not user.exists() or user[0].otp != otp:
+                return Response({
+                    'status': 400,
+                    'message': 'Something went wrong',
+                    'data': 'Invalid data'
+                })
+            
+            user = user.first()
+            user.is_verified = True
+            user.save()
+            return Response({
+                "status": 200,
+                "message": "You have successfully confirmed your account",
+                "data": serializer.data
+            })
