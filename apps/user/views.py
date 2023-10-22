@@ -84,7 +84,7 @@ class LogoutView(APIView):
         return response
     
 
-class VerifyOTP(APIView):
+class VerifyOTPView(APIView):
     
     permission_classes = [IsAuthenticated]
 
@@ -110,3 +110,16 @@ class VerifyOTP(APIView):
                 "message": "You have successfully confirmed your account",
                 "data": serializer.data
             })
+        
+
+class ResendOTPView(APIView):
+    def post(self, request):
+        serializer = VerifyUserSerializer(data=request.data)
+        email = serializer.data['email']
+        send_otp_via_email(email)
+        
+        return Response({
+            "status": 200,
+            "message": "The OTP verification code was send",
+            "data": serializer.data
+        })
