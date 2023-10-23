@@ -23,7 +23,7 @@ class Group(models.Model):
         if not self.link_id:
             while True:
                 link_id = generate_short_string()
-                if not self.objects.filter(link_id=link_id).exists():
+                if not Group.objects.filter(link_id=link_id).exists():
                     self.link_id = link_id
                     break
         super().save(*args, **kwargs)
