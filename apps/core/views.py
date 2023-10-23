@@ -36,6 +36,9 @@ class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     
 
 class JoinUserToGroupView(APIView):
+    
+    permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request):
         serializer = serializers.JoinUserToGroupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
