@@ -10,6 +10,6 @@ router.register('user', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('get-users-by-group/<int:pk>/', GetUsersByGroupViewSet.as_view({'get': 'list'}))
-
+    path('join/', JoinUserToGroupView.as_view()),
+    path('get-users-by-group/<int:pk>/', GetUsersByGroupViewSet.as_view({'get': 'list'})),
 ]

@@ -10,8 +10,8 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'get_group_courses',]
-    fields = ['name', 'get_group_courses', 'get_group_students']
+    list_display = ['id', 'link_id', 'name', 'get_group_courses',]
+    fields = ['name', 'link_id', 'get_group_courses', 'get_group_students']
     readonly_fields = ['get_group_courses', 'get_group_students']
 
 

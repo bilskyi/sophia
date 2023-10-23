@@ -5,7 +5,12 @@ from . import models
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Group
-        fields = ['id', 'name',]
+        fields = ['id', 'name', 'link_id']
+        extra_kwargs = {
+            'link_id': {
+                'read_only': True
+            }
+        }
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -23,3 +28,7 @@ class CourseSerializer(serializers.ModelSerializer):
         course = models.Course.objects.create(**validated_data)
         course.owner.add(user)
         return course
+    
+
+class JoinUserToGroupSerializer(serializers.Serializer):
+    link_id = serializers.CharField(max_length=6)
