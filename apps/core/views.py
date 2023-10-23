@@ -4,6 +4,7 @@ from . import serializers
 from .permissions import *
 from .models import *
 from rest_framework import generics, permissions, viewsets
+from rest_framework.views import APIView
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -31,3 +32,8 @@ class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         group_id = self.kwargs.get('pk')
         return User.objects.filter(group_id=group_id)
+    
+
+class JoinUserToGroup(APIView):
+    def post(self, request):
+        user = request.user
