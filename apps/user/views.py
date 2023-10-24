@@ -118,6 +118,9 @@ class VerifyOTPView(APIView):
         
 
 class ResendOTPView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = VerifyUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
