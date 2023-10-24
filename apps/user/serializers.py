@@ -19,6 +19,6 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
     
 
-class VerifyUserSerializer(serializers.Serializer):
+class VerifyUserOTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()

@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate, logout
 from rest_framework.views import APIView
 from .emails import send_otp_via_email
-from .serializers import UserSerializer, VerifyUserSerializer
+from .serializers import *
 from .models import User
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
@@ -94,7 +94,7 @@ class VerifyOTPView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = VerifyUserSerializer(data=request.data)
+        serializer = VerifyUserOTPSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             email = serializer.data['email']
             otp = serializer.data['otp']
@@ -122,13 +122,11 @@ class ResendOTPView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = VerifyUserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email = serializer.data['email']
+        email = request.user.email
         send_otp_via_email(email)
         
         return Response({
             "status": 200,
             "message": "The OTP verification code was send",
-            "data": serializer.data
+            "data": request.data
         })
