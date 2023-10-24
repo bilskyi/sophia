@@ -4,8 +4,10 @@ from apps.user.models import User
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'description', 'group']
     fields = ['name', 'description', 'group', 'owner']
     readonly_fields = ['owner']
+    search_fields = ['name', 'description']
 
 
 @admin.register(Group)
@@ -13,6 +15,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'get_group_courses',]
     fields = ['name', 'link_id', 'get_group_courses', 'get_group_students']
     readonly_fields = ['get_group_courses', 'get_group_students', 'link_id']
+    search_fields = ['name', 'link_id']
 
 
     @admin.display(description='Group Courses')

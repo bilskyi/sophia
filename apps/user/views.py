@@ -5,7 +5,7 @@ from .serializers import UserSerializer, VerifyUserSerializer
 from .models import User
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 import jwt, datetime
 
 
@@ -60,6 +60,9 @@ class LoginView(APIView):
 
 
 class UserView(APIView):
+    
+    permission_classes = [IsAdminUser]
+
     def get(self, request):
         user = request.user
         if not user.is_authenticated:
