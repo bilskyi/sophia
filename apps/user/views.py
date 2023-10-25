@@ -125,6 +125,12 @@ class ResendOTPView(APIView):
 
     def post(self, request):
         email = request.user.email
+        if request.user.is_verified:
+            return Response({
+                'status': '200',
+                'message': 'User has already been verified'
+            })
+    
         send_otp_via_email(email)
         
         return Response({
