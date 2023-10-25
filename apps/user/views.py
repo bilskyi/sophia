@@ -17,12 +17,16 @@ class RegisterView(APIView):
         serializer = UserRegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.create(validated_data=serializer.validated_data)
+
         send_otp_via_email(serializer.data['email'])
+
         login(request, user)
-        return Response({'status': 200,
-                         'message': 'Registration was successful, check your email',
-                         'data': serializer.data
-                         })
+
+        return Response({
+            'status': 200,
+            'message': 'Registration was successful, check your email',
+            'data': serializer.data
+        })
 
 
 class LoginView(APIView):

@@ -3,14 +3,27 @@ from . import models
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    courses = serializers.SerializerMethodField('get_courses')
+
     class Meta:
         model = models.Group
-        fields = ['id', 'name', 'link_id']
+        fields = ['id', 'name', 'link_id', 'courses']
         extra_kwargs = {
             'link_id': {
                 'read_only': True
             }
         }
+    
+    def get_courses(self, obj):
+        courses = obj.group_courses.all()
+        course_data = []
+        for course in courses:
+            course_data.append({
+                'id': course.id,
+                'name': course.name,
+                'description': course.description
+            })
+        return course_data
 
 
 class CourseSerializer(serializers.ModelSerializer):
