@@ -65,12 +65,13 @@ class UserView(APIView):
 
     def get(self, request):
         user = request.user
-        if not user.is_authenticated:
-            raise AuthenticationFailed('Unauthenticated')
 
         serializer = UserSerializer(user)
 
-        return Response(serializer.data)
+        return Response({
+            'status': 200,
+            'data': serializer.data
+        })
 
 
 class LogoutView(APIView):
@@ -83,7 +84,8 @@ class LogoutView(APIView):
         response = Response()
         response.delete_cookie('jwt')
         response.data = {
-            'status': 200
+            'status': 200,
+            'message': 'user logged out'
         }
 
         return response
@@ -128,5 +130,4 @@ class ResendOTPView(APIView):
         return Response({
             "status": 200,
             "message": "The OTP verification code was send",
-            "data": request.data
         })
