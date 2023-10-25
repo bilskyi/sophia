@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from apps.user.serializers import UserSerializer
+from apps.user.serializers import *
 from . import serializers
 from .permissions import *
 from .models import *
@@ -22,12 +22,12 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = BaseUserSerializer
     permission_classes = [IsAdminOrReadOnly]
 
 
 class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserSerializer
+    serializer_class = BaseUserSerializer
     permission_classes = [IsCourseOwner | permissions.IsAdminUser]
 
     def get_queryset(self):

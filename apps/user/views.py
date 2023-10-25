@@ -14,7 +14,7 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.create(validated_data=serializer.validated_data)
         send_otp_via_email(serializer.data['email'])
@@ -30,7 +30,7 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.data['email']
         password = serializer.data['password']
@@ -66,7 +66,7 @@ class UserView(APIView):
     def get(self, request):
         user = request.user
 
-        serializer = UserSerializer(user)
+        serializer = BaseUserSerializer(user)
 
         return Response({
             'status': 200,
