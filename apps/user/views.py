@@ -98,7 +98,7 @@ class VerifyOTPView(APIView):
     def post(self, request):
         serializer = VerifyUserOTPSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            email = serializer.data['email']
+            email = request.user.email
             otp = serializer.data['otp']
 
             user = User.objects.filter(email=email)
