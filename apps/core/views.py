@@ -1,29 +1,32 @@
-from django.shortcuts import render
 from apps.user.serializers import *
 from . import serializers
 from .permissions import *
 from .models import *
-from rest_framework import generics, permissions, viewsets
+from rest_framework import permissions, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsTeacherOrReadOnly]
+    permission_classes = [IsCourseOwnerOrReadOnly]
+
+    def list(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAdminUser | IsCourseOwner | IsGroupParticipant]
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = BaseUserSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAdminUser | IsRequestUser]
 
 
 class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):

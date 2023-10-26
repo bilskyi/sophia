@@ -7,17 +7,19 @@ class IsVerified(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_verified
 
+class IsTeacher(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role == User.Role.TEACHER
+    
 
-class IsTeacherOrReadOnly(permissions.BasePermission):
+class IsTeacherOrReadOnly(IsTeacher):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        return request.user.role == User.Role.TEACHER
+        return super().has_permission(request, view)
 
 
 class IsAdminOrReadOnly(permissions.IsAdminUser):
-
     def has_permission(self, request, view):
         is_admin = super(
             IsAdminOrReadOnly,
@@ -35,3 +37,22 @@ class IsCourseOwner(permissions.BasePermission):
                     return True
     
         return False
+    
+class IsGroupParticipant(permissions.BasePermission):
+    pass
+
+
+class IsCourseOwnerOrReadOnly(IsCourseOwner):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return super().has_permission(request, view)
+    
+
+class IsRequestUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        try:
+            user = User.objects.get(pk=view.kwargs.get('pk'))
+            return request.user == user
+        except User.DoesNotExist:
+            return False
