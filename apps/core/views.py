@@ -20,7 +20,10 @@ class CourseViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
-    permission_classes = [permissions.IsAdminUser | IsCourseOwner | IsGroupParticipant]
+    permission_classes = [permissions.IsAdminUser | IsGroupParticipant]
+
+    def list(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class UserViewSet(viewsets.ModelViewSet):

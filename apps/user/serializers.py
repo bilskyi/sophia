@@ -15,23 +15,26 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
     def get_user_group(self, obj):
-        group = obj.group
-        if group:
-            group_data = {
-                'name': group.name,
-                'link_id': group.link_id,
-                'courses': []
-            }
-
-            for course in group.group_courses.all():
-                course_data = {
-                    'id': course.id,
-                    'name': course.name,
-                    'description': course.description
+        try:
+            group = obj.group
+            if group:
+                group_data = {
+                    'name': group.name,
+                    'link_id': group.link_id,
+                    'courses': []
                 }
-                group_data['courses'].append(course_data)
 
-            return group_data
+                for course in group.group_courses.all():
+                    course_data = {
+                        'id': course.id,
+                        'name': course.name,
+                        'description': course.description
+                    }
+                    group_data['courses'].append(course_data)
+
+                return group_data
+        except Exception as ex:
+            print(ex)
 
         return None 
     

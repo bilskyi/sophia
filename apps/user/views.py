@@ -63,21 +63,6 @@ class LoginView(APIView):
         return response
 
 
-class UserView(APIView):
-    
-    permission_classes = [IsAdminUser]
-
-    def get(self, request):
-        user = request.user
-
-        serializer = BaseUserSerializer(user)
-
-        return Response({
-            'status': 200,
-            'data': serializer.data
-        })
-
-
 class LogoutView(APIView):
     
     permission_classes = [IsAuthenticated]

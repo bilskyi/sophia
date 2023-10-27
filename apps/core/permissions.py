@@ -38,8 +38,10 @@ class IsCourseOwner(permissions.BasePermission):
     
         return False
     
+
 class IsGroupParticipant(permissions.BasePermission):
-    pass
+    def has_object_permission(self, request, view, obj):
+        return request.user.group == obj
 
 
 class IsCourseOwnerOrReadOnly(IsCourseOwner):
