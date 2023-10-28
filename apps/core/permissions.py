@@ -7,10 +7,11 @@ class IsVerified(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_verified
 
+
 class IsTeacher(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.role == User.Role.TEACHER
-    
+
 
 class IsTeacherOrReadOnly(IsTeacher):
     def has_permission(self, request, view):
@@ -27,21 +28,22 @@ class IsAdminOrReadOnly(permissions.IsAdminUser):
         is_admin = super().has_permission(request, view)
 
         return request.method in permissions.SAFE_METHODS or is_admin
-    
+
 
 class IsCourseOwner(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.role == User.Role.TEACHER:
-                has_courses_with_group = Course.objects.filter(owner=request.user, group_id=view.kwargs.get('pk')).exists()
-                if has_courses_with_group:
-                    return True
-    
-        return False
-    
+            has_courses_with_group = Course.objects.filter(
+                owner=request.user, group_id=view.kwargs.get('pk')).exists()
+            if has_courses_with_group:
+                return True
 
-class IsGroupParticipant(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return request.user.group == obj
+        return False
+
+
+class IsCourseOwnerSafe(IsCourseOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) if request.method in permissions.SAFE_METHODS else False
 
 
 class IsCourseOwnerOrReadOnly(IsCourseOwner):
@@ -49,7 +51,12 @@ class IsCourseOwnerOrReadOnly(IsCourseOwner):
         if request.method in permissions.SAFE_METHODS:
             return True
         return super().has_permission(request, view)
-    
+
+
+class IsGroupParticipant(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user.group == obj
+
 
 class IsRequestUser(permissions.BasePermission):
     def has_permission(self, request, view):
