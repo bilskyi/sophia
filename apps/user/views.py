@@ -10,7 +10,6 @@ import jwt, datetime
 
 
 class RegisterView(APIView):
-
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -30,7 +29,6 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -64,7 +62,6 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -81,7 +78,6 @@ class LogoutView(APIView):
     
 
 class VerifyOTPView(APIView):
-    
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -109,7 +105,6 @@ class VerifyOTPView(APIView):
         
 
 class ResendOTPView(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):

@@ -29,13 +29,21 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser | IsGroupParticipant | IsCourseOwnerSafe]
 
     def list(self, request):
-        groups = Group.objects.filter(pk=request.user.group.pk)
-        serializer = self.get_serializer(groups, many=True)
+        if request.user.group:
+            groups = Group.objects.filter(pk=request.user.group.pk)
+            serializer = self.get_serializer(groups, many=True)
+
+            return Response({
+                'status': 200,
+                'message': 'The list of your group(s):',
+                'data': serializer.data
+            })
+        
         return Response({
-            'status': 200,
-            'message': 'The list of your group(s):',
-            'data': serializer.data
+            'status': 404,
+            'message': "User does not have a group",
         })
+    
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -45,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BaseUserSerializer
-    permission_classes = [IsCourseOwner | permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser | IsCourseOwner]
 
     def get_queryset(self):
         group_id = self.kwargs.get('pk')
@@ -53,9 +61,8 @@ class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     
 
 class JoinUserToGroupView(APIView):
-    
     permission_classes = [permissions.IsAuthenticated]
-
+    
     def post(self, request):
         serializer = serializers.JoinUserToGroupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

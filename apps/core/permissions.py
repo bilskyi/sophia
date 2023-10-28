@@ -55,7 +55,10 @@ class IsCourseOwnerOrReadOnly(IsCourseOwner):
 
 class IsCourseParticipant(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return obj in request.user.group.group_courses.all()
+        if request.user.group:
+            return obj in request.user.group.group_courses.all()
+        else:
+            False
 
 
 class IsCourseParticipantSafe(IsCourseParticipant):
