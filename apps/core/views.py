@@ -14,7 +14,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser | IsCourseOwner | IsCourseParticipantSafe]
 
     def list(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        courses = Course.objects.filter(group=request.user.group)
+        serializer = self.get_serializer(courses, many=True)
+        return Response({
+            'status': 200,
+            'message': 'The list of your course(s):',
+            'data': serializer.data
+        })
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -23,8 +29,13 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser | IsGroupParticipant | IsCourseOwnerSafe]
 
     def list(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
+        groups = Group.objects.filter(pk=request.user.group.pk)
+        serializer = self.get_serializer(groups, many=True)
+        return Response({
+            'status': 200,
+            'message': 'The list of your group(s):',
+            'data': serializer.data
+        })
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
