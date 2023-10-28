@@ -51,7 +51,16 @@ class IsCourseOwnerOrReadOnly(IsCourseOwner):
         if request.method in permissions.SAFE_METHODS:
             return True
         return super().has_permission(request, view)
+    
 
+class IsCourseParticipant(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj in request.user.group.group_courses.all()
+
+
+class IsCourseParticipantSafe(IsCourseParticipant):
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj) if request.method in permissions.SAFE_METHODS else False
 
 class IsGroupParticipant(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

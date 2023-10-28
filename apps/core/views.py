@@ -11,7 +11,7 @@ from rest_framework import status
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsCourseOwnerOrReadOnly]
+    permission_classes = [permissions.IsAdminUser | IsCourseOwner | IsCourseParticipantSafe]
 
     def list(self, request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
