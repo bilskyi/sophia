@@ -68,12 +68,8 @@ class IsCourseParticipantSafe(IsCourseParticipant):
 class IsGroupParticipant(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user.group == obj
-
+    
 
 class IsRequestUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        try:
-            user = User.objects.get(pk=view.kwargs.get('pk'))
-            return request.user == user
-        except User.DoesNotExist:
-            return False
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj

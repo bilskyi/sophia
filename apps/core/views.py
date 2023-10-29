@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from apps.user.serializers import *
 from . import serializers
 from .permissions import *
@@ -49,6 +50,11 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = BaseUserSerializer
     permission_classes = [permissions.IsAdminUser | IsRequestUser]
+
+    def list(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('user-detail', pk=request.user.pk)
+        return super().list(request, *args, **kwargs)
 
 
 class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
