@@ -12,11 +12,12 @@ from rest_framework import status
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [permissions.IsAdminUser | IsCourseOwner | IsCourseParticipantSafe]
+    permission_classes = [permissions.IsAdminUser | IsCourseOwner | IsCourseParticipantReadOnly]
 
     def list(self, request):
         courses = Course.objects.filter(group=request.user.group)
         serializer = self.get_serializer(courses, many=True)
+
         return Response({
             'status': 200,
             'message': 'The list of your course(s):',
@@ -27,7 +28,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
-    permission_classes = [permissions.IsAdminUser | IsGroupParticipant | IsCourseOwnerSafe]
+    permission_classes = [permissions.IsAdminUser | IsGroupParticipant | IsCourseOwnerReadOnly]
 
     def list(self, request):
         if request.user.group:
