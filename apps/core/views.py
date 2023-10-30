@@ -1,9 +1,9 @@
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from apps.user.serializers import *
 from . import serializers
 from .permissions import *
 from .models import *
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -68,8 +68,7 @@ class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     
 
 class JoinUserToGroupView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    
+
     def post(self, request):
         serializer = serializers.JoinUserToGroupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -90,4 +89,26 @@ class JoinUserToGroupView(APIView):
             'status': 404,
             'message': "We couldn't find such course",
             "data": serializer.data
+        })
+
+
+class DeleteUserFromGroupView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+    
+    def delete(self, request, group_pk, user_pk):
+        group = get_object_or_404(Group, pk=group_pk)
+        user = get_object_or_404(User, pk=user_pk)
+
+        if user.group != group:
+            return Response({
+                'status': status.HTTP_400_BAD_REQUEST,
+                "detail": "User is not a member of this group",
+            })
+
+        user.group = None
+        user.save()
+
+        return Response({
+            'status': 204,
+            'message': f'User removed from the group {group.name} successfully'
         })
