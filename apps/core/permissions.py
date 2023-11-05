@@ -71,6 +71,13 @@ class IsGroupParticipant(permissions.BasePermission):
         return request.user.group == obj
     
 
+class IsGroupParticipantReadOnly(IsGroupParticipant):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return super().has_object_permission(request, view, obj)
+        return False
+    
+
 class IsRequestUser(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user == obj

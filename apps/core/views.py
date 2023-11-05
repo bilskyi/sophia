@@ -28,7 +28,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
-    permission_classes = [permissions.IsAdminUser | IsGroupParticipant | IsCourseOwnerReadOnly]
+    permission_classes = [permissions.IsAdminUser | IsGroupParticipantReadOnly | IsCourseOwnerReadOnly]
 
     def list(self, request):
         if request.user.group:
