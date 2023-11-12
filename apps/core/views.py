@@ -23,6 +23,15 @@ class CourseViewSet(viewsets.ModelViewSet):
             'message': 'The list of your course(s):',
             'data': serializer.data
         })
+    
+    def create(self, request, *args, **kwargs):
+        if request.user.role in (User.Role.TEACHER, User.Role.ADMIN):
+            return super().create(request, *args, **kwargs)
+        
+        return Response({
+            'status': 403,
+            'message': 'You do not have permission to perfom this action.'
+        })
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -46,17 +55,28 @@ class GroupViewSet(viewsets.ModelViewSet):
             'message': "User does not have a group",
         })
     
+    def create(self, request, *args, **kwargs):
+        if request.user.role == User.Role.ADMIN:
+            return super().create(request, *args, **kwargs)
+        
+        return Response({
+            'status': 403,
+            'message': 'You do not have permission to perfom this action.'
+        })
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = BaseUserSerializer
     permission_classes = [permissions.IsAdminUser | IsRequestUser]
+    http_method_names = ['get']
 
     def list(self, request, *args, **kwargs):
         if not request.user.is_superuser:
             return redirect('user-detail', pk=request.user.pk)
-        return super().list(request, *args, **kwargs)
 
+        return super().list(request, *args, **kwargs)
+    
 
 class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BaseUserSerializer
