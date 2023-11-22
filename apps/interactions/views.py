@@ -61,6 +61,6 @@ class DeleteUserFromGroupView(APIView):
 
 class CourseTaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
-    serializer_class = CourseTaskSerializer()
+    serializer_class = CourseTaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsVerified, IsTeacher]
-    
+
