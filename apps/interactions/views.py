@@ -64,3 +64,11 @@ class CourseTaskViewSet(viewsets.ModelViewSet):
     serializer_class = CourseTaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsVerified, IsTeacher]
 
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.filter(course__owner=user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context

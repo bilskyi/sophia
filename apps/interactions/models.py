@@ -11,4 +11,4 @@ class Task(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.title, self.course
+        return self.title
