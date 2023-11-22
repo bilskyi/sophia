@@ -18,6 +18,11 @@ class IsTeacherOrReadOnly(IsTeacher):
         if request.method in permissions.SAFE_METHODS:
             return True
         return super().has_permission(request, view)
+    
+
+class IsStudent(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role == User.Role.STUDENT
 
 
 class IsAdminOrReadOnly(permissions.IsAdminUser):
@@ -61,9 +66,11 @@ class IsCourseParticipant(permissions.BasePermission):
             False
 
 
-class IsCourseParticipantReadOnly(permissions.BasePermission):
+class IsCourseParticipantReadOnly(IsCourseParticipant):
     def has_object_permission(self, request, view, obj):
-        return True if request.method in permissions.SAFE_METHODS else False
+        if request.method in permissions.SAFE_METHODS:
+            return super().has_object_permission(request, view, obj)
+        return False
 
 
 class IsGroupParticipant(permissions.BasePermission):

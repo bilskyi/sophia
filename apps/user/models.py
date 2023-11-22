@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('First Name'), max_length=255)
     last_name = models.CharField(_('Last Name'), max_length=255)
     role = models.PositiveSmallIntegerField(_('Role'), choices=Role.choices, blank=False)
-    group = models.ForeignKey('core.Group', on_delete=models.SET_NULL, related_name='users', verbose_name=_("Group"), null=True, blank=True)
+    group = models.ForeignKey('core.Group', on_delete=models.CASCADE, related_name='users', verbose_name=_("Group"), null=True, blank=True)
 
     is_verified = models.BooleanField(default=False)
     otp = models.CharField(max_length=20, null=True, blank=True)

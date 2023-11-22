@@ -80,7 +80,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BaseUserSerializer
-    permission_classes = [permissions.IsAdminUser | IsCourseOwner]
+    permission_classes = [IsVerified, permissions.IsAuthenticated, (permissions.IsAdminUser | IsCourseOwner)]
 
     def get_queryset(self):
         group_id = self.kwargs.get('pk')
@@ -88,7 +88,7 @@ class GetUsersByGroupViewSet(viewsets.ReadOnlyModelViewSet):
     
 
 class JoinUserToGroupView(APIView):
-
+    permission_classes = [permissions.IsAuthenticated, IsVerified, IsStudent]
     def post(self, request):
         serializer = serializers.JoinUserToGroupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -113,7 +113,7 @@ class JoinUserToGroupView(APIView):
 
 
 class DeleteUserFromGroupView(APIView):
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, IsVerified]
     
     def delete(self, request, group_pk, user_pk):
         group = get_object_or_404(Group, pk=group_pk)
