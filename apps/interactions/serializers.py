@@ -1,7 +1,7 @@
 from rest_framework import serializers
-
 from apps.core.models import Course
 from .models import Task
+
 
 class CourseTaskSerializer(serializers.ModelSerializer):
 
